@@ -105,16 +105,13 @@ model_comparison <- function(train_data, test_data, formula0, y_col, formula1, s
 
 
 # example of comparing model C+M with model C+M+K for the primary outcome
-clinical_MRI_formula <- ' ~ AGE+RACE+ETHNICITY+MRI_MORPHOLOGY+PARENCHYMAL_ENHANCEMENT+ELIG_BIOPSY_DCIS_GRADE+ELIG_BIOPSY_NECROSIS+ELIG_BIOPSY_ER_STATUS+ELIG_BIOPSY_PR_STATUS'
-outcome <- 'upgrade'
-data_primary <- as.data.frame(read_csv(paste0(workingDir, '/data_primary.csv')))
-
-association_analysis(data_primary, 'k=2', 'UPGRADE_TO_INVASION')
+association_analysis(data, 'k=2', 'UPGRADE_TO_INVASION')
 
 set.seed(1)
-obj <- stratified(data_primary, 'DCIS_SCORE', 0.6, bothSets=TRUE) # training and testing set split using stratified sampling
+obj <- stratified(data, 'DCIS_SCORE', 0.6, bothSets=TRUE) # training and testing set split using stratified sampling
 train_data <- obj[[1]]
 test_data <- obj[[2]]
 
-out <- model_comparison_train_test(train_data, test_data, clinical_MRI_formula, 'UPGRADE_TO_INVASION', ' + `k=2`', 0.9)
-
+out <- model_comparisont(train_data, test_data, 
+                         ' ~ AGE+RACE+ETHNICITY+MRI_MORPHOLOGY+PARENCHYMAL_ENHANCEMENT+ELIG_BIOPSY_DCIS_GRADE+ELIG_BIOPSY_NECROSIS+ELIG_BIOPSY_ER_STATUS+ELIG_BIOPSY_PR_STATUS', 
+                         'UPGRADE_TO_INVASION', ' + `k=2`', 0.9)
